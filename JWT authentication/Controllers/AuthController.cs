@@ -43,5 +43,25 @@ namespace JWT_authentication.Controllers
 
             return BadRequest("Something went wrong");
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO dto)
+        {
+            var user = await UserManager.FindByEmailAsync(dto.Username);
+
+            if (user != null)
+            {
+                var checkPassword = await UserManager.CheckPasswordAsync(user, dto.Password);
+            
+                if (checkPassword)
+                {
+                    //create token
+
+                    return Ok();
+                }
+            }
+
+            return BadRequest("Username or password incorrect");
+        }
     }
 }
